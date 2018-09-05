@@ -23,9 +23,7 @@ import thaumcraft.common.config.ConfigBlocks;
 
 import java.util.ArrayList;
 
-public class EMT_Large_Essentia_Gen extends GT_MetaTileEntity_MultiBlockBase {
-
-	public ArrayList<EssentiaHatch> mEssentiaHatches = new ArrayList();
+public class EMT_Large_Essentia_Gen extends EMT_Large_Essentia_Multiblock {
 	private static final byte CASING_INDEX = 2;
 	private byte tick = 0;
 	private boolean has_lube = false;
@@ -248,23 +246,6 @@ public class EMT_Large_Essentia_Gen extends GT_MetaTileEntity_MultiBlockBase {
 		*/
 		return true;
 	}
-
-	private boolean addEssetiaHatchToList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex){
-		if (aTileEntity == null) {
-			return false;
-		} else {
-			IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-			if (aMetaTileEntity == null) {
-				return false;
-			} else if (aMetaTileEntity instanceof EssentiaHatch) {
-				((EssentiaHatch)aMetaTileEntity).updateTexture(aBaseCasingIndex);
-				return this.mEssentiaHatches.add((EssentiaHatch)aMetaTileEntity);
-			} else {
-				return false;
-			}
-		}
-	}
-
 
 	private void make_energy(){
 		AspectList fuel = this.mEssentiaHatches.get(0).getAspects();

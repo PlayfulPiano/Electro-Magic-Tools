@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import emt.gthandler.common.implementations.EssentiaHatch;
 import emt.gthandler.common.items.EMT_CasingBlock;
+import emt.gthandler.common.tileentities.machines.multi.generator.EMT_LargeTechnoAlchemicConstruct;
 import emt.gthandler.common.tileentities.machines.multi.generator.EMT_Large_Essentia_Gen;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
@@ -26,6 +27,7 @@ public class EMT_GT_Loader implements Runnable {
     public static int aIDoffset = 13000-TIERS-1;
     public static ItemStack[] EHatch = new ItemStack[TIERS];
     public static ItemStack LEG;
+    public static ItemStack LTAC;
     @Override
     public void run() {
         
@@ -34,6 +36,8 @@ public class EMT_GT_Loader implements Runnable {
         }
         GameRegistry.registerBlock(EMT_CasingBlock.EMT_GT_BLOCKS[0],EMT_CasingBlock.class,"EMT_GTBLOCK_CASEING");
         LEG = new EMT_Large_Essentia_Gen(aIDoffset+TIERS+1,"Large Essentia Generator","Large Essentia Generator").getStackForm(1L);
+        LTAC= new EMT_LargeTechnoAlchemicConstruct(aIDoffset-1,"EMT_LargeTechnoAlchemicConstruct","EMT_LargeTechnoAlchemicConstruct").getStackForm(1L);
+
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.frameGt,Materials.Indium,1L),GT_OreDictUnificator.get(OrePrefixes.stickLong,Materials.Tungsten,4L)},Materials.SolderingAlloy.getMolten(576L), new ItemStack(EMT_CasingBlock.EMT_GT_BLOCKS[0],1,3),100, (int)(GT_Values.V[5]-(GT_Values.V[5]/10)));
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{new ItemStack(EMT_CasingBlock.EMT_GT_BLOCKS[0],1,3),GT_OreDictUnificator.get(OrePrefixes.plate,Materials.Iridium,8L)},Materials.Osmiridium.getMolten(576L), new ItemStack(EMT_CasingBlock.EMT_GT_BLOCKS[0],1,5),100, (int)(GT_Values.V[5]-(GT_Values.V[5]/10)));
         GT_Values.RA.addAssemblerRecipe(new ItemStack[]{GT_OreDictUnificator.get(OrePrefixes.frameGt,Materials.Iridium,1L),GT_OreDictUnificator.get(OrePrefixes.stickLong,Materials.Osmiridium,4L)},Materials.SolderingAlloy.getMolten(576L), new ItemStack(EMT_CasingBlock.EMT_GT_BLOCKS[0],1,2),100, (int)(GT_Values.V[5]-(GT_Values.V[5]/10)));

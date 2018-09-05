@@ -1,10 +1,14 @@
 package emt.gthandler.common.implementations;
 
 import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
+import gregtech.api.objects.GT_RenderedTexture;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,7 +20,7 @@ import thaumcraft.api.aspects.AspectList;
 import java.util.ArrayList;
 
 
-public class EssentiaHatch extends GT_MetaTileEntity_Hatch_Input {
+public class EssentiaHatch extends GT_MetaTileEntity_Hatch {
 
     private AspectList current = new AspectList();
     private static int ApTe = (int) Math.ceil(Aspect.aspects.size()/GT_Values.V.length);
@@ -33,15 +37,11 @@ public class EssentiaHatch extends GT_MetaTileEntity_Hatch_Input {
     }
 
     public EssentiaHatch(int aID, String aName, String aNameRegional, int aTier) {
-        super(aID, aName, aNameRegional, aTier);
-    }
-
-    public EssentiaHatch(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier, aDescription, aTextures);
+        super(aID, aName, aNameRegional, aTier, 0, new String[] { }, new ITexture[0]);
     }
 
     public EssentiaHatch(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
-        super(aName, aTier, aDescription, aTextures);
+        super(aName, aTier,0, aDescription, aTextures);
     }
 
     public void setCurrent(AspectList List){
@@ -111,6 +111,16 @@ public class EssentiaHatch extends GT_MetaTileEntity_Hatch_Input {
     }
 
     @Override
+    public ITexture[] getTexturesActive(ITexture aBaseTexture) {
+        return new ITexture[]{aBaseTexture, new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_IN)};
+    }
+
+    @Override
+    public ITexture[] getTexturesInactive(ITexture aBaseTexture) {
+        return new ITexture[]{aBaseTexture, new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_IN)};
+    }
+
+    @Override
     public void saveNBTData(NBTTagCompound var1){
 
         NBTTagList tlist = new NBTTagList();
@@ -170,4 +180,83 @@ public class EssentiaHatch extends GT_MetaTileEntity_Hatch_Input {
         return 0;
     }
 
+    @Override
+    public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
+        return new int[0];
+    }
+
+    @Override
+    public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, int p_102007_3_) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, int p_102008_3_) {
+        return false;
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return 0;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int p_70301_1_) {
+        return null;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
+        return null;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
+
+    }
+
+    @Override
+    public String getInventoryName() {
+        return null;
+    }
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 0;
+    }
+
+    @Override
+    public void markDirty() {
+
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+        return false;
+    }
+
+    @Override
+    public void openInventory() {
+
+    }
+
+    @Override
+    public void closeInventory() {
+
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
+        return false;
+    }
 }
