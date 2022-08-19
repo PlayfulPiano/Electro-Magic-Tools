@@ -24,7 +24,7 @@ public class EMT_RecipeAdder {
             "emt.recipe.fusioncrafting",
             "Draconic Evolution Fusion Crafter",
             null,
-            RES_PATH_GUI + "multimachines/FusionCrafter",
+            RES_PATH_GUI + "basicmachines/FusionCrafter",
             9,
             1,
             1,
