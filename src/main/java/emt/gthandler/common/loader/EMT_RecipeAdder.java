@@ -94,7 +94,6 @@ public class EMT_RecipeAdder {
                     GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Ichorium, 1),
                     ItemList.QuantumEye.get(1L),
                     new ItemStack(EMTItems.itemEMTItems, 0, 16)
-
                 },
                 Materials.Sunnarium.getMolten(1440),
                 GT_ModHandler.getModItem("DraconicEvolution", "draconicCore", 1, 0),
@@ -110,7 +109,6 @@ public class EMT_RecipeAdder {
                     GT_ModHandler.getModItem("DraconicEvolution", "draconicCore", 4, 0),
                     ItemList.QuantumStar.get(1L),
                     new ItemStack(EMTItems.itemEMTItems, 0, 17),
-
                 },
                 Materials.Neutronium.getMolten(1440),
                 GT_ModHandler.getModItem("DraconicEvolution", "wyvernCore", 1, 0),
@@ -126,7 +124,6 @@ public class EMT_RecipeAdder {
                     GT_ModHandler.getModItem("DraconicEvolution", "wyvernCore", 4, 0),
                     GT_ModHandler.getModItem("dreamcraft", "ManyullynCrystal", 1, 0),
                     new ItemStack(EMTItems.itemEMTItems, 0, 18)
-
                 },
                 Materials.Infinity.getMolten(1440),
                 GT_ModHandler.getModItem("DraconicEvolution", "awakenedCore", 1, 0),
@@ -142,7 +139,6 @@ public class EMT_RecipeAdder {
                     GT_ModHandler.getModItem("DraconicEvolution", "awakenedCore", 4, 0),
                     GT_ModHandler.getModItem("DraconicEvolution", "chaosShard", 1, 0),
                     new ItemStack(EMTItems.itemEMTItems, 0, 19)
-
                 },
                 Materials.SpaceTime.getMolten(1440),
                 GT_ModHandler.getModItem("DraconicEvolution", "chaoticCore", 1, 0),
