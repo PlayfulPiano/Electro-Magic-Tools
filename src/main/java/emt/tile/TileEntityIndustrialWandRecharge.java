@@ -150,8 +150,7 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
         }
 
         if (this.energyStored == 0) {
-            double energyNBT = p_145839_1_.getDouble("Energy");
-            this.energyStored = energyNBT;
+            this.energyStored = p_145839_1_.getDouble("Energy");
         }
     }
 
