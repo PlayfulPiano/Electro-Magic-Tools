@@ -1,21 +1,61 @@
 package emt.tile;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import emt.init.EMTBlocks;
 import emt.util.EMTConfigHandler;
-import ic2.api.energy.prefab.BasicSink;
+import ic2.api.energy.tile.IEnergySink;
 import ic2.api.tile.IWrenchable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 import thaumcraft.common.items.wands.ItemWandCasting;
 
-public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements IInventory, IWrenchable {
+public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements IInventory, IWrenchable, IEnergySink {
+    private static final int capacity = 1000000;
+    private static final int tier = 4;
+    private double energyStored = 0;
+
+    public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
+        return true;
+    }
+
+    public double getDemandedEnergy() {
+        return Math.max(0.0D, (double) capacity - this.energyStored);
+    }
+
+    public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
+        if (this.getDemandedEnergy() > 0) {
+            this.energyStored += amount;
+            return 0.0D;
+        }
+        return amount;
+    }
+
+    public int getSinkTier() {
+        return tier;
+    }
+
+    private boolean canUseEnergy(double amount) {
+        return this.energyStored >= amount;
+    }
+
+    private boolean useEnergy(double amount) {
+        if (this.canUseEnergy(amount)
+                && !FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+            this.energyStored -= amount;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     ItemStack ItemStacks[];
-    private BasicSink ic2EnergySink = new BasicSink(this, 100000, 4);
 
     public TileEntityIndustrialWandRecharge() {
         ItemStacks = new ItemStack[1];
@@ -66,23 +106,21 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
 
     @Override
     public void updateEntity() {
-        ic2EnergySink.updateEntity();
-        if (!this.worldObj.isRemote) {
-            if (getStackInSlot(0) != null) {
+        if (this.worldObj.isRemote || getStackInSlot(0) == null) {
+            return;
+        }
 
-                ItemStack wand = getStackInSlot(0);
-                if (wand != null && wand.getItem() instanceof ItemWandCasting) {
-                    ItemWandCasting wandItem = (ItemWandCasting) wand.getItem();
-                    if (ic2EnergySink.useEnergy(EMTConfigHandler.wandChargerConsumption)
-                            && wandItem.getAspectsWithRoom(wand) != null) {
-                        wandItem.addVis(wand, Aspect.ORDER, 1, true);
-                        wandItem.addVis(wand, Aspect.FIRE, 1, true);
-                        wandItem.addVis(wand, Aspect.ENTROPY, 1, true);
-                        wandItem.addVis(wand, Aspect.WATER, 1, true);
-                        wandItem.addVis(wand, Aspect.EARTH, 1, true);
-                        wandItem.addVis(wand, Aspect.AIR, 1, true);
-                    }
-                }
+        ItemStack wand = getStackInSlot(0);
+        if (wand != null && wand.getItem() instanceof ItemWandCasting) {
+            ItemWandCasting wandItem = (ItemWandCasting) wand.getItem();
+            AspectList aspects = wandItem.getAspectsWithRoom((wand));
+            if (aspects != null && aspects.size() != 0 && this.useEnergy(EMTConfigHandler.wandChargerConsumption)) {
+                wandItem.addVis(wand, Aspect.ORDER, 1, true);
+                wandItem.addVis(wand, Aspect.FIRE, 1, true);
+                wandItem.addVis(wand, Aspect.ENTROPY, 1, true);
+                wandItem.addVis(wand, Aspect.WATER, 1, true);
+                wandItem.addVis(wand, Aspect.EARTH, 1, true);
+                wandItem.addVis(wand, Aspect.AIR, 1, true);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
@@ -110,6 +148,10 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
                 this.ItemStacks[b0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
             }
         }
+
+        if (this.energyStored == 0) {
+            this.energyStored = p_145839_1_.getDouble("Energy");
+        }
     }
 
     public void writeToNBT(NBTTagCompound p_145841_1_) {
@@ -126,6 +168,7 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
         }
 
         p_145841_1_.setTag("Items", nbttaglist);
+        p_145841_1_.setDouble("Energy", this.energyStored);
     }
 
     @Override
@@ -145,17 +188,6 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
         return true;
-    }
-
-    @Override
-    public void invalidate() {
-        ic2EnergySink.invalidate();
-        super.invalidate();
-    }
-
-    @Override
-    public void onChunkUnload() {
-        ic2EnergySink.onChunkUnload();
     }
 
     @Override
