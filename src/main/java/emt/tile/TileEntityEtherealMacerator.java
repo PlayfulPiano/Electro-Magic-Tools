@@ -231,6 +231,7 @@ public class TileEntityEtherealMacerator extends TileEntityEMT
     }
 
     public boolean isAllowed(ItemStack stack) {
+        if (stack == null) return false;
         int[] oreDictIDs = OreDictionary.getOreIDs(stack);
         for (int oreDictID : oreDictIDs) {
             String tName = OreDictionary.getOreName(oreDictID);
@@ -293,9 +294,8 @@ public class TileEntityEtherealMacerator extends TileEntityEMT
         InvWrapper invWrapper = new InvWrapper(this);
 
         builder.widget(new SlotWidget(invWrapper, 0)
-                        .setFilter(stack -> stack != null
-                                && FurnaceRecipes.smelting().getSmeltingResult(stack) != null
-                                && isAllowed(stack))
+                        .setFilter(stack ->
+                                isAllowed(stack) && FurnaceRecipes.smelting().getSmeltingResult(stack) != null)
                         .setPos(55, 25))
                 .widget(new SlotWidget(invWrapper, 2)
                         .setAccess(true, false)
