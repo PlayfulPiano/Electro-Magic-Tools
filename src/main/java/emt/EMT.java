@@ -82,7 +82,6 @@ public class EMT {
         }
         EMTDungeonChestGenerator.generateLoot();
         EMTEntities.registerEMTEntities();
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 
         NEI_Config.Init();
     }

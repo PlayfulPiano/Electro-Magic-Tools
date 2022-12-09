@@ -1,5 +1,6 @@
 package emt.block;
 
+import com.gtnewhorizons.modularui.api.UIInfos;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import emt.EMT;
@@ -78,10 +79,11 @@ public class BlockMachines extends BlockBaseContainer {
     @Override
     public boolean onBlockActivated(
             World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-        if (!world.isRemote && world.getTileEntity(x, y, z) instanceof TileEntityIndustrialWandRecharge) {
-            player.openGui(EMT.instance, 0, world, x, y, z);
-        } else if (!world.isRemote && world.getTileEntity(x, y, z) instanceof TileEntityEtherealMacerator) {
-            player.openGui(EMT.instance, 1, world, x, y, z);
+        if (!world.isRemote) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te instanceof TileEntityIndustrialWandRecharge || te instanceof TileEntityEtherealMacerator) {
+                UIInfos.TILE_MODULAR_UI.open(player, world, x, y, z);
+            }
         }
         return true;
     }

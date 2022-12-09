@@ -1,5 +1,6 @@
 package emt.block;
 
+import com.gtnewhorizons.modularui.api.UIInfos;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import emt.EMT;
@@ -145,7 +146,7 @@ public class BlockSolars extends BlockBaseContainer {
         }
         TileEntity tileentity = world.getTileEntity(i, j, k);
         if (tileentity != null) {
-            player.openGui(emt.EMT.instance, 1, world, i, j, k);
+            UIInfos.TILE_MODULAR_UI.open(player, world, i, j, k);
         }
         return true;
     }

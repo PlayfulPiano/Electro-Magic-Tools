@@ -6,7 +6,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import java.util.ArrayList;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -47,21 +47,15 @@ public class EssentiaHatch extends GT_MetaTileEntity_Hatch_Input {
         return current;
     }
 
+    @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new EssentiaHatch(
                 "Essentia Hatch " + GT_Values.VN[this.mTier], this.mTier, this.getDescription(), this.mTextures);
     }
 
     @Override
-    public Object getClientGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        // TODO: new GUI.
-        return null;
-    }
-
-    @Override
-    public Object getServerGUI(int aID, InventoryPlayer aPlayerInventory, IGregTechTileEntity aBaseMetaTileEntity) {
-        // TODO: new contanier GUI.
-        return null;
+    public boolean onRightclick(IGregTechTileEntity aBaseMetaTileEntity, EntityPlayer aPlayer) {
+        return false;
     }
 
     @Override
@@ -146,18 +140,22 @@ public class EssentiaHatch extends GT_MetaTileEntity_Hatch_Input {
         return ret;
     }
 
+    @Override
     public boolean isFluidInputAllowed(FluidStack aFluid) {
         return false;
     }
 
+    @Override
     public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
         return false;
     }
 
+    @Override
     public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
         return false;
     }
 
+    @Override
     public int getCapacity() {
         return 0;
     }

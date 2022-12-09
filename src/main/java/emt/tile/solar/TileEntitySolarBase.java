@@ -1,9 +1,19 @@
 package emt.tile.solar;
 
+import com.gtnewhorizons.modularui.api.ModularUITextures;
+import com.gtnewhorizons.modularui.api.drawable.Text;
+import com.gtnewhorizons.modularui.api.screen.ITileWithModularUI;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
+import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
+import com.gtnewhorizons.modularui.common.widget.ProgressBar;
+import com.gtnewhorizons.modularui.common.widget.TextWidget;
 import cpw.mods.fml.common.FMLCommonHandler;
+import emt.client.gui.EMT_UITextures;
 import emt.init.EMTBlocks;
 import emt.tile.DefinitelyNotAIC2Source;
 import emt.tile.TileEntityEMT;
+import emt.util.EMTTextHelper;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.interfaces.tileentity.IBasicEnergyContainer;
 import gregtech.api.interfaces.tileentity.IEnergyConnected;
@@ -19,6 +29,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -27,7 +38,12 @@ import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.visnet.VisNetHandler;
 
 public class TileEntitySolarBase extends TileEntityEMT
-        implements IInventory, IWrenchable, IHasWorldObjectAndCoords, IEnergyConnected, IBasicEnergyContainer {
+        implements IInventory,
+                IWrenchable,
+                IHasWorldObjectAndCoords,
+                IEnergyConnected,
+                IBasicEnergyContainer,
+                ITileWithModularUI {
 
     private static final byte NOTHING = 0;
     private static final byte ORDO = 1;
@@ -98,6 +114,7 @@ public class TileEntitySolarBase extends TileEntityEMT
         this.side = !this.worldObj.isRemote
                 ? FMLCommonHandler.instance().getEffectiveSide().isServer()
                 : FMLCommonHandler.instance().getSide().isServer();
+        if (!side) return;
         this.dead = false;
         this.timer = +1L;
         inputintoGTnet();
@@ -284,42 +301,53 @@ public class TileEntitySolarBase extends TileEntityEMT
         this.mp_storage = this.storage / 1000;
     }
 
+    @Override
     public int getSizeInventory() {
         return 0;
     }
 
+    @Override
     public ItemStack getStackInSlot(int i) {
         return null;
     }
 
+    @Override
     public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
         return null;
     }
 
+    @Override
     public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
         return null;
     }
 
+    @Override
     public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {}
 
+    @Override
     public boolean hasCustomInventoryName() {
         return true;
     }
 
+    @Override
     public String getInventoryName() {
         return guiname;
     }
 
+    @Override
     public int getInventoryStackLimit() {
         return 0;
     }
 
+    @Override
     public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
         return true;
     }
 
+    @Override
     public void openInventory() {}
 
+    @Override
     public void closeInventory() {}
 
     public int gaugeEnergyScaled(long i) {
@@ -368,23 +396,28 @@ public class TileEntitySolarBase extends TileEntityEMT
         }
     }
 
+    @Override
     public byte getColorization() {
         return this.color;
     }
 
+    @Override
     public byte setColorization(byte aColor) {
         this.color = aColor;
         return this.color;
     }
 
+    @Override
     public boolean isUniversalEnergyStored(long aEnergyAmount) {
         return aEnergyAmount < this.energySource.getEnergyStored();
     }
 
+    @Override
     public long getUniversalEnergyStored() {
         return (long) this.energySource.getEnergyStored();
     }
 
+    @Override
     public long getUniversalEnergyCapacity() {
         return (long) this.energySource.getCapacity();
     }
@@ -401,6 +434,7 @@ public class TileEntitySolarBase extends TileEntityEMT
         return voltAmp;
     }
 
+    @Override
     public long getOutputAmperage() {
         return calculateMaxVoltAmp()[1];
         //        long ret;
@@ -424,18 +458,22 @@ public class TileEntitySolarBase extends TileEntityEMT
         //        return ret;
     }
 
+    @Override
     public long getOutputVoltage() {
         return GT_Values.V[this.energySource.getSourceTier()];
     }
 
+    @Override
     public long getInputAmperage() {
         return 0L;
     }
 
+    @Override
     public long getInputVoltage() {
         return 0L;
     }
 
+    @Override
     public boolean decreaseStoredEnergyUnits(long aEnergy, boolean aIgnoreTooLessEnergy) {
         if (this.energySource.getEnergyStored() > aEnergy) {
             this.energySource.drawEnergy(aEnergy);
@@ -445,51 +483,63 @@ public class TileEntitySolarBase extends TileEntityEMT
         return false;
     }
 
+    @Override
     public boolean increaseStoredEnergyUnits(long aEnergy, boolean aIgnoreTooMuchEnergy) {
         return false;
     }
 
+    @Override
     public boolean drainEnergyUnits(byte aSide, long aVoltage, long aAmperage) {
         return decreaseStoredEnergyUnits(
                 aVoltage * aAmperage, this.energySource.getEnergyStored() > aVoltage * aAmperage);
     }
 
+    @Override
     public long getAverageElectricInput() {
         return 0L;
     }
 
+    @Override
     public long getAverageElectricOutput() {
         return 0L;
     }
 
+    @Override
     public long getStoredEU() {
         return (long) this.energySource.getEnergyStored();
     }
 
+    @Override
     public long getEUCapacity() {
         return (long) this.energySource.getCapacity();
     }
 
+    @Override
     public long getStoredSteam() {
         return 0L;
     }
 
+    @Override
     public long getSteamCapacity() {
         return 0L;
     }
 
+    @Override
     public boolean increaseStoredSteam(long aEnergy, boolean aIgnoreTooMuchEnergy) {
         return false;
     }
 
+    @Override
     public long injectEnergyUnits(byte aSide, long aVoltage, long aAmperage) {
         return 0L;
     }
 
+    @Override
     public boolean inputEnergyFrom(byte aSide) {
         return false;
     }
 
+    @Override
     public boolean outputsEnergyTo(byte aSide) {
         return true;
     }
@@ -498,42 +548,52 @@ public class TileEntitySolarBase extends TileEntityEMT
         return false;
     }
 
+    @Override
     public World getWorld() {
         return this.worldObj;
     }
 
+    @Override
     public int getXCoord() {
         return this.xCoord;
     }
 
+    @Override
     public short getYCoord() {
         return (short) this.yCoord;
     }
 
+    @Override
     public int getZCoord() {
         return this.zCoord;
     }
 
+    @Override
     public boolean isServerSide() {
         return side;
     }
 
+    @Override
     public boolean isClientSide() {
         return side;
     }
 
+    @Override
     public int getRandomNumber(int aRange) {
         return this.worldObj.rand.nextInt(aRange);
     }
 
+    @Override
     public TileEntity getTileEntity(int aX, int aY, int aZ) {
         return this.worldObj.getTileEntity(aX, aY, aZ);
     }
 
+    @Override
     public TileEntity getTileEntityOffset(int aX, int aY, int aZ) {
         return this.worldObj.getTileEntity(aX + this.xCoord, aY + this.yCoord, aZ + this.zCoord);
     }
 
+    @Override
     public TileEntity getTileEntityAtSide(byte aSide) {
         if ((aSide < 0) || (aSide >= 6)) {
             return null;
@@ -544,6 +604,7 @@ public class TileEntitySolarBase extends TileEntityEMT
         return this.worldObj.getTileEntity(tX, tY, tZ);
     }
 
+    @Override
     public TileEntity getTileEntityAtSideAndDistance(byte aSide, int aDistance) {
         if (aDistance == 1) {
             return getTileEntityAtSide(aSide);
@@ -551,38 +612,47 @@ public class TileEntitySolarBase extends TileEntityEMT
         return getTileEntity(getOffsetX(aSide, aDistance), getOffsetY(aSide, aDistance), getOffsetZ(aSide, aDistance));
     }
 
+    @Override
     public IInventory getIInventory(int aX, int aY, int aZ) {
         return null;
     }
 
+    @Override
     public IInventory getIInventoryOffset(int aX, int aY, int aZ) {
         return null;
     }
 
+    @Override
     public IInventory getIInventoryAtSide(byte aSide) {
         return null;
     }
 
+    @Override
     public IInventory getIInventoryAtSideAndDistance(byte aSide, int aDistance) {
         return null;
     }
 
+    @Override
     public IFluidHandler getITankContainer(int aX, int aY, int aZ) {
         return null;
     }
 
+    @Override
     public IFluidHandler getITankContainerOffset(int aX, int aY, int aZ) {
         return null;
     }
 
+    @Override
     public IFluidHandler getITankContainerAtSide(byte aSide) {
         return null;
     }
 
+    @Override
     public IFluidHandler getITankContainerAtSideAndDistance(byte aSide, int aDistance) {
         return null;
     }
 
+    @Override
     public IGregTechTileEntity getIGregTechTileEntity(int aX, int aY, int aZ) {
         TileEntity tTileEntity = getTileEntity(aX, aY, aZ);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
@@ -591,10 +661,12 @@ public class TileEntitySolarBase extends TileEntityEMT
         return null;
     }
 
+    @Override
     public IGregTechTileEntity getIGregTechTileEntityOffset(int aX, int aY, int aZ) {
         return getIGregTechTileEntity(aX + this.xCoord, aY + this.yCoord, aZ + this.zCoord);
     }
 
+    @Override
     public IGregTechTileEntity getIGregTechTileEntityAtSide(byte aSide) {
         TileEntity tTileEntity = getTileEntityAtSide(aSide);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
@@ -603,6 +675,7 @@ public class TileEntitySolarBase extends TileEntityEMT
         return null;
     }
 
+    @Override
     public IGregTechTileEntity getIGregTechTileEntityAtSideAndDistance(byte aSide, int aDistance) {
         TileEntity tTileEntity = getTileEntityAtSideAndDistance(aSide, aDistance);
         if ((tTileEntity instanceof IGregTechTileEntity)) {
@@ -611,14 +684,17 @@ public class TileEntitySolarBase extends TileEntityEMT
         return null;
     }
 
+    @Override
     public Block getBlock(int aX, int aY, int aZ) {
         return this.worldObj.getBlock(aX, aY, aZ);
     }
 
+    @Override
     public Block getBlockOffset(int aX, int aY, int aZ) {
         return getBlock(this.xCoord + aX, this.yCoord + aY, this.zCoord + aZ);
     }
 
+    @Override
     public Block getBlockAtSide(byte aSide) {
         if ((aSide < 0) || (aSide >= 6)) {
             return null;
@@ -629,6 +705,7 @@ public class TileEntitySolarBase extends TileEntityEMT
         return this.worldObj.getBlock(tX, tY, tZ);
     }
 
+    @Override
     public Block getBlockAtSideAndDistance(byte aSide, int aDistance) {
         if (aDistance == 1) {
             return getBlockAtSide(aSide);
@@ -636,14 +713,17 @@ public class TileEntitySolarBase extends TileEntityEMT
         return getBlock(getOffsetX(aSide, aDistance), getOffsetY(aSide, aDistance), getOffsetZ(aSide, aDistance));
     }
 
+    @Override
     public byte getMetaID(int aX, int aY, int aZ) {
         return (byte) this.worldObj.getBlockMetadata(aX, aY, aZ);
     }
 
+    @Override
     public byte getMetaIDOffset(int aX, int aY, int aZ) {
         return getMetaID(this.xCoord + aX, this.yCoord + aY, this.zCoord + aZ);
     }
 
+    @Override
     public byte getMetaIDAtSide(byte aSide) {
         int tX = getOffsetX(aSide, 1);
         int tY = getOffsetY(aSide, 1);
@@ -651,6 +731,7 @@ public class TileEntitySolarBase extends TileEntityEMT
         return (byte) this.worldObj.getBlockMetadata(tX, tY, tZ);
     }
 
+    @Override
     public byte getMetaIDAtSideAndDistance(byte aSide, int aDistance) {
         if (aDistance == 1) {
             return getMetaIDAtSide(aSide);
@@ -658,38 +739,47 @@ public class TileEntitySolarBase extends TileEntityEMT
         return getMetaID(getOffsetX(aSide, aDistance), getOffsetY(aSide, aDistance), getOffsetZ(aSide, aDistance));
     }
 
+    @Override
     public byte getLightLevel(int aX, int aY, int aZ) {
         return 0;
     }
 
+    @Override
     public byte getLightLevelOffset(int aX, int aY, int aZ) {
         return 0;
     }
 
+    @Override
     public byte getLightLevelAtSide(byte aSide) {
         return 0;
     }
 
+    @Override
     public byte getLightLevelAtSideAndDistance(byte aSide, int aDistance) {
         return 0;
     }
 
+    @Override
     public boolean getOpacity(int aX, int aY, int aZ) {
         return false;
     }
 
+    @Override
     public boolean getOpacityOffset(int aX, int aY, int aZ) {
         return false;
     }
 
+    @Override
     public boolean getOpacityAtSide(byte aSide) {
         return false;
     }
 
+    @Override
     public boolean getOpacityAtSideAndDistance(byte aSide, int aDistance) {
         return false;
     }
 
+    @Override
     public boolean getSky(int aX, int aY, int aZ) {
         boolean sky = true;
         do {
@@ -700,58 +790,72 @@ public class TileEntitySolarBase extends TileEntityEMT
         return sky;
     }
 
+    @Override
     public boolean getSkyOffset(int aX, int aY, int aZ) {
         return getSky(aX + this.xCoord, aY + this.yCoord, aZ + this.zCoord);
     }
 
+    @Override
     public boolean getSkyAtSide(byte aSide) {
         return false;
     }
 
+    @Override
     public boolean getSkyAtSideAndDistance(byte aSide, int aDistance) {
         return false;
     }
 
+    @Override
     public boolean getAir(int aX, int aY, int aZ) {
         return this.worldObj.getBlock(aX, aY, aZ).equals(Blocks.air);
     }
 
+    @Override
     public boolean getAirOffset(int aX, int aY, int aZ) {
         return getAir(this.xCoord + aX, this.yCoord + aY, this.zCoord + aZ);
     }
 
+    @Override
     public boolean getAirAtSide(byte aSide) {
         return getAirAtSideAndDistance(aSide, 1);
     }
 
+    @Override
     public boolean getAirAtSideAndDistance(byte aSide, int aDistance) {
         return getAir(getOffsetX(aSide, aDistance), getOffsetY(aSide, aDistance), getOffsetZ(aSide, aDistance));
     }
 
+    @Override
     public BiomeGenBase getBiome() {
         return this.worldObj.getBiomeGenForCoords(this.xCoord, this.zCoord);
     }
 
+    @Override
     public BiomeGenBase getBiome(int aX, int aZ) {
         return this.worldObj.getBiomeGenForCoords(aX, aZ);
     }
 
+    @Override
     public int getOffsetX(byte aSide, int aMultiplier) {
         return this.xCoord + ForgeDirection.getOrientation(aSide).offsetX * aMultiplier;
     }
 
+    @Override
     public short getOffsetY(byte aSide, int aMultiplier) {
         return (short) (this.yCoord + ForgeDirection.getOrientation(aSide).offsetY * aMultiplier);
     }
 
+    @Override
     public int getOffsetZ(byte aSide, int aMultiplier) {
         return this.zCoord + ForgeDirection.getOrientation(aSide).offsetZ * aMultiplier;
     }
 
+    @Override
     public boolean isDead() {
         return this.dead;
     }
 
+    @Override
     public void sendBlockEvent(byte aID, byte aValue) {
         GT_Values.NW.sendPacketToAllPlayersInRange(
                 this.worldObj,
@@ -760,29 +864,63 @@ public class TileEntitySolarBase extends TileEntityEMT
                 this.zCoord);
     }
 
+    @Override
     public long getTimer() {
         return this.timer;
     }
 
+    @Override
     public void setLightValue(byte aLightValue) {}
 
+    @Override
     public boolean isInvalidTileEntity() {
         return this.tileEntityInvalid;
     }
 
-    public boolean openGUI(EntityPlayer aPlayer, int aID) {
-        return false;
-    }
-
-    public boolean openGUI(EntityPlayer aPlayer) {
-        return false;
-    }
-
+    @Override
     public boolean outputsEnergyTo(byte b, boolean b1) {
         return true;
     }
 
+    @Override
     public boolean inputEnergyFrom(byte b, boolean b1) {
         return false;
+    }
+
+    @Override
+    public ModularWindow createWindow(UIBuildContext buildContext) {
+        ModularWindow.Builder builder = ModularWindow.builder(176, 107);
+        builder.setBackground(ModularUITextures.VANILLA_BACKGROUND);
+
+        builder.widget(new TextWidget(
+                                new Text(getInventoryName()).color(0x64fc06).shadow())
+                        .setPos(9, 9))
+                .widget(new ProgressBar()
+                        .setTexture(EMT_UITextures.PICTURE_GAUGE_EMPTY_25, EMT_UITextures.PICTURE_GAUGE_SOLAR, 25)
+                        .setProgress(() -> (float) storage / this.maxstorage)
+                        .setSynced(false, false)
+                        .setPos(9, 24)
+                        .setSize(25, 11))
+                .widget(new ProgressBar()
+                        .setTexture(EMT_UITextures.PICTURE_GAUGE_EMPTY_11, EMT_UITextures.PICTURE_SOLAR_INDICATOR, 11)
+                        .setProgress(() -> generating > 9 ? 1f : 0f)
+                        .setSynced(false, false)
+                        .setPos(9, 43)
+                        .setSize(11, 11))
+                .widget(TextWidget.dynamicString(() -> StatCollector.translateToLocal("emt.Storage")
+                                + EMTTextHelper.formatNumber(storage) + "/"
+                                + EMTTextHelper.formatNumber(maxstorage) + "EU")
+                        .setSynced(false)
+                        .setDefaultColor(0)
+                        .setPos(36, 22))
+                .widget(new FakeSyncWidget.LongSyncer(() -> storage, val -> storage = val))
+                .widget(TextWidget.dynamicString(
+                                () -> StatCollector.translateToLocal("emt.Generating") + generating + " EU/t")
+                        .setSynced(false)
+                        .setDefaultColor(0)
+                        .setPos(36, 35))
+                .widget(new FakeSyncWidget.DoubleSyncer(() -> generating, val -> generating = val));
+
+        return builder.build();
     }
 }

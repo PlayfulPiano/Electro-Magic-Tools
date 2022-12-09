@@ -1,8 +1,17 @@
 package emt.tile;
 
+import com.gtnewhorizons.modularui.api.ModularUITextures;
+import com.gtnewhorizons.modularui.api.forge.InvWrapper;
+import com.gtnewhorizons.modularui.api.screen.ITileWithModularUI;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
+import com.gtnewhorizons.modularui.common.widget.SlotWidget;
+import com.gtnewhorizons.modularui.common.widget.TextWidget;
 import cpw.mods.fml.common.FMLCommonHandler;
+import emt.client.gui.EMT_UITextures;
 import emt.init.EMTBlocks;
 import emt.util.EMTConfigHandler;
+import emt.util.EMTTextHelper;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.tile.IWrenchable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,19 +25,23 @@ import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.common.items.wands.ItemWandCasting;
 
-public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements IInventory, IWrenchable, IEnergySink {
+public class TileEntityIndustrialWandRecharge extends TileEntityEMT
+        implements IInventory, IWrenchable, IEnergySink, ITileWithModularUI {
     private static final int capacity = 1000000;
     private static final int tier = 4;
     private double energyStored = 0;
 
+    @Override
     public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
         return true;
     }
 
+    @Override
     public double getDemandedEnergy() {
         return Math.max(0.0D, (double) capacity - this.energyStored);
     }
 
+    @Override
     public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
         if (this.getDemandedEnergy() > 0) {
             this.energyStored += amount;
@@ -37,6 +50,7 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
         return amount;
     }
 
+    @Override
     public int getSinkTier() {
         return tier;
     }
@@ -135,6 +149,7 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
         }
     }
 
+    @Override
     public void readFromNBT(NBTTagCompound p_145839_1_) {
         super.readFromNBT(p_145839_1_);
         NBTTagList nbttaglist = p_145839_1_.getTagList("Items", 10);
@@ -154,6 +169,7 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
         }
     }
 
+    @Override
     public void writeToNBT(NBTTagCompound p_145841_1_) {
         super.writeToNBT(p_145841_1_);
         NBTTagList nbttaglist = new NBTTagList();
@@ -232,5 +248,19 @@ public class TileEntityIndustrialWandRecharge extends TileEntityEMT implements I
     @Override
     public ItemStack getWrenchDrop(EntityPlayer entityPlayer) {
         return new ItemStack(EMTBlocks.emtMachines, 1, 0);
+    }
+
+    @Override
+    public ModularWindow createWindow(UIBuildContext buildContext) {
+        ModularWindow.Builder builder = ModularWindow.builder(176, 166);
+        builder.setBackground(ModularUITextures.VANILLA_BACKGROUND);
+        builder.bindPlayerInventory(buildContext.getPlayer());
+
+        builder.widget(new SlotWidget(new InvWrapper(this), 0)
+                        .setBackground(ModularUITextures.ITEM_SLOT, EMT_UITextures.OVERLAY_SLOT_WAND)
+                        .setPos(79, 34))
+                .widget(new TextWidget(EMTTextHelper.localize("gui.EMT.wandRecharge.title")).setPos(6, 6));
+
+        return builder.build();
     }
 }

@@ -1,5 +1,6 @@
 package emt.block;
 
+import com.gtnewhorizons.modularui.api.UIInfos;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import emt.EMT;
@@ -45,6 +46,7 @@ public class BlockEssentiaGenerators extends BlockBaseContainer {
         iconSets[5].frontOff = ir.registerIcon(EMT.TEXTURE_PATH + ":essentiagenerator/aerfront");
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item id, CreativeTabs tab, List list) {
         list.add(new ItemStack(id, 1, 0));
@@ -60,6 +62,7 @@ public class BlockEssentiaGenerators extends BlockBaseContainer {
         return new TileEntityBaseGenerator(meta);
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(World world, int x, int y, int z, Random random) {
         TileEntityBaseGenerator te = (TileEntityBaseGenerator) world.getTileEntity(x, y, z);
@@ -75,6 +78,7 @@ public class BlockEssentiaGenerators extends BlockBaseContainer {
         }
     }
 
+    @Override
     public boolean onBlockActivated(
             World world, int i, int j, int k, EntityPlayer player, int s, float f1, float f2, float f3) {
         if (player.isSneaking()) {
@@ -85,7 +89,7 @@ public class BlockEssentiaGenerators extends BlockBaseContainer {
         }
         TileEntity tileentity = world.getTileEntity(i, j, k);
         if (tileentity != null) {
-            player.openGui(emt.EMT.instance, 1, world, i, j, k);
+            UIInfos.TILE_MODULAR_UI.open(player, world, i, j, k);
         }
         return true;
     }

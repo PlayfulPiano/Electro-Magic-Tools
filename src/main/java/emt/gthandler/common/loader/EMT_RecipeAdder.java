@@ -4,6 +4,7 @@ import static gregtech.api.enums.GT_Values.E;
 import static gregtech.api.enums.GT_Values.RES_PATH_GUI;
 
 import cpw.mods.fml.common.Loader;
+import emt.client.gui.EMT_UITextures;
 import emt.init.EMTItems;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.ItemList;
@@ -20,21 +21,22 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class EMT_RecipeAdder {
     public static final GT_Recipe.GT_Recipe_Map sFusionCraftingRecipes = new GT_Recipe.GT_Recipe_Map(
-            new HashSet<>(4),
-            "emt.recipe.fusioncrafting",
-            "Draconic Evolution Fusion Crafter",
-            null,
-            RES_PATH_GUI + "basicmachines/FusionCrafter",
-            9,
-            1,
-            1,
-            0,
-            1,
-            "Tier Casing: ",
-            1,
-            E,
-            false,
-            false);
+                    new HashSet<>(16),
+                    "emt.recipe.fusioncrafting",
+                    "Draconic Evolution Fusion Crafter",
+                    null,
+                    RES_PATH_GUI + "basicmachines/FusionCrafter",
+                    9,
+                    1,
+                    1,
+                    0,
+                    1,
+                    "Tier Casing: ",
+                    1,
+                    E,
+                    false,
+                    false)
+            .setSlotOverlay(false, false, EMT_UITextures.OVERLAY_SLOT_FUSION_CRAFTING);
 
     public static void addFusionCraftingRecipe(
             ItemStack[] inputs,

@@ -1,7 +1,17 @@
 package emt.tile;
 
+import com.gtnewhorizons.modularui.api.ModularUITextures;
+import com.gtnewhorizons.modularui.api.forge.InvWrapper;
+import com.gtnewhorizons.modularui.api.screen.ITileWithModularUI;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
+import com.gtnewhorizons.modularui.common.widget.ProgressBar;
+import com.gtnewhorizons.modularui.common.widget.SlotWidget;
+import com.gtnewhorizons.modularui.common.widget.TextWidget;
 import emt.init.EMTBlocks;
 import emt.util.EMTConfigHandler;
+import emt.util.EMTTextHelper;
+import gregtech.api.gui.modularui.GT_UITextures;
 import ic2.api.tile.IWrenchable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -12,7 +22,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.common.config.ConfigItems;
 
-public class TileEntityEtherealMacerator extends TileEntityEMT implements ISidedInventory, IWrenchable {
+public class TileEntityEtherealMacerator extends TileEntityEMT
+        implements ISidedInventory, IWrenchable, ITileWithModularUI {
 
     private static final int[] slots_top = new int[] {0};
     private static final int[] slots_bottom = new int[] {2, 1};
@@ -21,14 +32,17 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
     public int cookTime;
     private ItemStack[] slots = new ItemStack[3];
 
+    @Override
     public int getSizeInventory() {
         return this.slots.length;
     }
 
+    @Override
     public ItemStack getStackInSlot(int par1) {
         return this.slots[par1];
     }
 
+    @Override
     public ItemStack decrStackSize(int par1, int par2) {
         if (this.slots[par1] != null) {
             ItemStack itemstack;
@@ -51,6 +65,7 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
         }
     }
 
+    @Override
     public ItemStack getStackInSlotOnClosing(int par1) {
         if (this.slots[par1] != null) {
             ItemStack itemstack = this.slots[par1];
@@ -61,6 +76,7 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
         }
     }
 
+    @Override
     public void setInventorySlotContents(int par1, ItemStack par2ItemStack) {
         this.slots[par1] = par2ItemStack;
 
@@ -69,14 +85,7 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
         }
     }
 
-    public String getInvName() {
-        return "Ethereal Processor";
-    }
-
-    public boolean isInvNameLocalized() {
-        return false;
-    }
-
+    @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
         NBTTagList nbttaglist = tagCompound.getTagList("Items", 10);
@@ -93,6 +102,7 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
         this.cookTime = tagCompound.getShort("CookTime");
     }
 
+    @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setShort("CookTime", (short) this.cookTime);
@@ -109,12 +119,14 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
         tagCompound.setTag("Items", nbttaglist);
     }
 
+    @Override
     public int getInventoryStackLimit() {
         return 64;
     }
 
+    @Override
     public void updateEntity() {
-        if (this.canSmelt() && !isOverLimit(1) && !isOverLimit(2) && isAllowed()) {
+        if (this.canSmelt() && !isOverLimit(1) && !isOverLimit(2) && isAllowed(this.slots[0])) {
             ++this.cookTime;
             this.isOn = true;
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -177,6 +189,7 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
         }
     }
 
+    @Override
     public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer) {
         return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this
                 ? false
@@ -185,10 +198,6 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
                         <= 64.0D;
     }
 
-    public void openChest() {}
-
-    public void closeChest() {}
-
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         if (slot != 0) return false;
@@ -196,14 +205,17 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
         return false;
     }
 
+    @Override
     public int[] getAccessibleSlotsFromSide(int par1) {
         return par1 == 0 ? slots_bottom : (par1 == 1 ? slots_top : slots_sides);
     }
 
+    @Override
     public boolean canInsertItem(int par1, ItemStack par2ItemStack, int par3) {
         return this.isItemValidForSlot(par1, par2ItemStack);
     }
 
+    @Override
     public boolean canExtractItem(int par1, ItemStack par2ItemStack, int par3) {
         return true;
     }
@@ -218,9 +230,8 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
         }
     }
 
-    public boolean isAllowed() {
-
-        int[] oreDictIDs = OreDictionary.getOreIDs(this.slots[0]);
+    public boolean isAllowed(ItemStack stack) {
+        int[] oreDictIDs = OreDictionary.getOreIDs(stack);
         for (int oreDictID : oreDictIDs) {
             String tName = OreDictionary.getOreName(oreDictID);
             for (String allowed : EMTConfigHandler.etherealMaceratorWhiteList) {
@@ -273,4 +284,31 @@ public class TileEntityEtherealMacerator extends TileEntityEMT implements ISided
 
     @Override
     public void closeInventory() {}
+
+    @Override
+    public ModularWindow createWindow(UIBuildContext buildContext) {
+        ModularWindow.Builder builder = ModularWindow.builder(176, 166);
+        builder.setBackground(ModularUITextures.VANILLA_BACKGROUND);
+        builder.bindPlayerInventory(buildContext.getPlayer());
+        InvWrapper invWrapper = new InvWrapper(this);
+
+        builder.widget(new SlotWidget(invWrapper, 0)
+                        .setFilter(stack -> stack != null
+                                && FurnaceRecipes.smelting().getSmeltingResult(stack) != null
+                                && isAllowed(stack))
+                        .setPos(55, 25))
+                .widget(new SlotWidget(invWrapper, 2)
+                        .setAccess(true, false)
+                        .setBackground(ModularUITextures.ITEM_SLOT.withFixedSize(26, 26, -4, -4))
+                        .setPos(115, 25))
+                .widget(new SlotWidget(invWrapper, 1).setAccess(true, false).setPos(115, 52))
+                .widget(new ProgressBar()
+                        .setTexture(GT_UITextures.PROGRESSBAR_MACERATE, 20)
+                        .setProgress(() -> (float) cookTime / maceratingSpeed)
+                        .setPos(81, 36)
+                        .setSize(20, 18))
+                .widget(new TextWidget(EMTTextHelper.localize("gui.EMT.etherealMacerator.title")).setPos(6, 6));
+
+        return builder.build();
+    }
 }
