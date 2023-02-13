@@ -45,6 +45,7 @@ public class EMTRecipes {
     public static IRecipe featherWing;
     public static IRecipe featherWings;
     public static IRecipe taintedFeathers;
+
     public static InfusionRecipe uraniumToIridium;
     public static InfusionRecipe diamondToUranium;
     public static InfusionRecipe goldToDiamond;
@@ -91,6 +92,7 @@ public class EMTRecipes {
     public static InfusionRecipe lucrumGenerator;
     public static ShapelessArcaneRecipe diamondOmnitool;
     public static ShapelessArcaneRecipe tinyUranium;
+    public static ShapelessArcaneRecipe alastorsDriverRecipe; // Added by Alastors, meant for Insurgence, will be removed
     public static ShapedArcaneRecipe christmasFocus;
     public static ShapedArcaneRecipe electricGoggles;
     public static ShapedArcaneRecipe electricGoggles2;
@@ -852,6 +854,14 @@ public class EMTRecipes {
                 new ItemStack(IC2Items.getItem("smallUran235").getItem(), 7),
                 EMTCraftingAspects.tinyUraniumCrafting,
                 IC2Items.getItem("Uran238"));
+
+        alastorsDriverRecipe = addShapelessArcaneCraftingRecipe(
+            "TABLE",
+            new ItemStack(EMTItems.alastorsScrewdriver, 1),
+            new AspectList().add(Aspect.ORDER, 10),
+            new ItemStack(ConfigItems.itemShovelThaumium)
+        );
+
 
         compressedSolar = addArcaneCraftingRecipe(
                 "Compressed Solars",

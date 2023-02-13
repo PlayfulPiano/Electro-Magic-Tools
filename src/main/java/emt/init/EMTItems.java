@@ -1,5 +1,6 @@
 package emt.init;
 
+import emt.item.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -9,10 +10,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.ThaumcraftApi;
 import cpw.mods.fml.common.registry.GameRegistry;
 import emt.EMT;
-import emt.item.ItemElectricScribingTools;
-import emt.item.ItemIC2Baubles;
-import emt.item.ItemMaterials;
-import emt.item.ItemOneRing;
 import emt.item.armor.boots.ItemElectricBootsTraveller;
 import emt.item.armor.boots.ItemNanoBootsTraveller;
 import emt.item.armor.boots.ItemQuantumBootsTraveller;
@@ -79,6 +76,7 @@ public class EMTItems {
     public static Item nanoWing;
     public static Item quantumWing;
     public static Item quantumArmor;
+    public static Item alastorsScrewdriver;
     public static ItemArmor.ArmorMaterial featherWingMaterial = EnumHelper
             .addArmorMaterial("FEATEHRWiNG", 1, new int[] { 2, 2, 2, 2 }, 6);
 
@@ -197,5 +195,11 @@ public class EMTItems {
 
         energyBallFocus = new ItemEnergyBallFocus();
         GameRegistry.registerItem(energyBallFocus, "EnergyBallFocus");
+
+
+        // Added by Alastor, meant for Thaumic Insurgence, will be removed as soon as convenient.
+        alastorsScrewdriver = new ItemAlastorsWand();
+        GameRegistry.registerItem(alastorsScrewdriver, alastorsScrewdriver.getUnlocalizedName());
+
     }
 }
