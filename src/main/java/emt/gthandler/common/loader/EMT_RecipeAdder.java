@@ -5,7 +5,6 @@ import static gregtech.api.enums.GT_Values.RES_PATH_GUI;
 
 import java.util.HashSet;
 
-import gregtech.api.enums.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -14,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.Loader;
 import emt.client.gui.EMT_UITextures;
 import emt.init.EMTItems;
+import gregtech.api.enums.*;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe;
