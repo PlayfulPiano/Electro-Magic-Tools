@@ -5,6 +5,7 @@ import static gregtech.api.enums.GT_Values.RES_PATH_GUI;
 
 import java.util.HashSet;
 
+import gregtech.api.enums.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -13,10 +14,6 @@ import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.Loader;
 import emt.client.gui.EMT_UITextures;
 import emt.init.EMTItems;
-import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.ItemList;
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.OrePrefixes;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe;
@@ -130,7 +127,7 @@ public class EMT_RecipeAdder {
                         GT_ModHandler.getModItem("DraconicEvolution", "awakenedCore", 4, 0),
                         GT_ModHandler.getModItem("DraconicEvolution", "chaosFragment", 2, 2),
                         new ItemStack(EMTItems.itemEMTItems, 0, 19) },
-                Materials.SpaceTime.getMolten(1440),
+                MaterialsUEVplus.SpaceTime.getMolten(1440),
                 GT_ModHandler.getModItem("DraconicEvolution", "chaoticCore", 1, 0),
                 GT_Values.NF,
                 3200,
