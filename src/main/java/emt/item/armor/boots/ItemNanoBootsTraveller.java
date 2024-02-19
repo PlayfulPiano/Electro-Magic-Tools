@@ -13,42 +13,23 @@ public class ItemNanoBootsTraveller extends ItemElectricBootsTraveller {
 
     public ItemNanoBootsTraveller(ArmorMaterial material, int par3, int par4) {
         super(material, par3, par4);
-        maxCharge = 1000000;
-        speedBonus = (float) EMTConfigHandler.nanoBootsSpeed;
-        jumpBonus = (float) EMTConfigHandler.nanoBootsJump;
+    }
+
+    protected void setBootsData() {
+        super.setBootsData();
+        maxCharge = 1_000_000;
+        energyPerDamage = 5000; // 200 hits, 2x prev
         visDiscount = 4;
+        damageAbsorptionRatio = 0.9D
         transferLimit = 1600;
-        energyPerDamage = 5000;
-    }
-
-    @Override
-    public float getMaxHealthyDropDist() {
-        return (float) EMTConfigHandler.nanoBootsMaxDrop;
-    }
-
-    @Override
-    public float getMinimumDropDist() {
-        return (float) EMTConfigHandler.nanoBootsMinDrop;
-    }
-
-    @Override
-    public double getDamageAbsorptionRatio() {
-        return 0.9D;
-    }
-
-    @Override
-    public int getTier(ItemStack itemStack) {
-        return 3;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister iconRegister) {
-        this.itemIcon = iconRegister.registerIcon(EMT.TEXTURE_PATH + ":armor/boots_nano");
-    }
-
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-        return EMT.TEXTURE_PATH + ":textures/models/nanobootstravel.png";
+        jumpBonus = (float) EMTConfigHandler.nanoBootsJump;
+        runBonus = (float) EMTConfigHandler.nanoBootsSpeed;
+        minimumHeight = (float) EMTConfigHandler.nanoBootsMinDrop;
+        minimumDistance = EMTConfigHandler.nanoBootsMaxDrop;
+        tier = 3;
+        negateFall = true;
+        iconResPath = EMT.TEXTURE_PATH + ":armor/boots_nano";
+        armorResPath = EMT.TEXTURE_PATH + ":textures/models/nanobootstravel.png";
+        unlocalisedName = EMT.MOD_ID + ".boots.traveller.nano";
     }
 }

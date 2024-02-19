@@ -13,42 +13,23 @@ public class ItemQuantumBootsTraveller extends ItemElectricBootsTraveller {
 
     public ItemQuantumBootsTraveller(ArmorMaterial material, int par3, int par4) {
         super(material, par3, par4);
-        maxCharge = 10000000;
-        speedBonus = (float) EMTConfigHandler.quantumBootsSpeed;
-        jumpBonus = (float) EMTConfigHandler.quantumBootsJump;
+    }
+
+    protected void setBootsData() {
+        super.setBootsData();
+        maxCharge = 10_000_000;
+        energyPerDamage = 20_000; // 500 hits, 2.5x prev
         visDiscount = 5;
-        transferLimit = 12000;
-        energyPerDamage = 20000;
-    }
-
-    @Override
-    public float getMaxHealthyDropDist() {
-        return (float) EMTConfigHandler.quantumBootsMaxDrop;
-    }
-
-    @Override
-    public float getMinimumDropDist() {
-        return (float) EMTConfigHandler.quantumBootsMinDrop;
-    }
-
-    @Override
-    public double getDamageAbsorptionRatio() {
-        return 1D;
-    }
-
-    @Override
-    public int getTier(ItemStack itemStack) {
-        return 4;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister iconRegister) {
-        this.itemIcon = iconRegister.registerIcon(EMT.TEXTURE_PATH + ":armor/boots_quantum");
-    }
-
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-        return EMT.TEXTURE_PATH + ":textures/models/quantumbootstravel.png";
+        damageAbsorptionRatio = 1D
+        transferLimit = 12_000;
+        jumpBonus = (float) EMTConfigHandler.quantumBootsJump;
+        runBonus = (float) EMTConfigHandler.quantumBootsSpeed;
+        minimumHeight = (float) EMTConfigHandler.quantumBootsMinDrop;
+        minimumDistance = EMTConfigHandler.quantumBootsMaxDrop;
+        tier = 4;
+        negateFall = true;
+        iconResPath = EMT.TEXTURE_PATH + ":armor/boots_quantum";
+        armorResPath = EMT.TEXTURE_PATH + ":textures/models/quantumbootstravel.png";
+        unlocalisedName = EMT.MOD_ID + ".boots.traveller.quantum".;
     }
 }

@@ -6,4 +6,5 @@ dependencies {
 
     api 'net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev'
     api 'thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev'
+    api 'com.github.GTNewHorizons:ThaumicBoots:1.2.0:dev'
 }

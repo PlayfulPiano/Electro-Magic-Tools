@@ -120,12 +120,10 @@ public class EMTItems {
                 .setUnlocalizedName(EMT.MOD_ID + ".goggles.solar");
         GameRegistry.registerItem(solarHelmetRevealing, "SolarHelmetRevealing");
 
-        electricBootsTraveller = new ItemElectricBootsTraveller(ItemArmor.ArmorMaterial.IRON, 3, 3)
-                .setUnlocalizedName(EMT.MOD_ID + ".boots.traveller.electric");
+        electricBootsTraveller = new ItemElectricBootsTraveller(ItemArmor.ArmorMaterial.IRON, 3, 3);
         GameRegistry.registerItem(electricBootsTraveller, "ElectricBootsTraveller");
 
         nanoBootsTraveller = new ItemNanoBootsTraveller(ItemArmor.ArmorMaterial.DIAMOND, 3, 3)
-                .setUnlocalizedName(EMT.MOD_ID + ".boots.traveller.nano");
         GameRegistry.registerItem(nanoBootsTraveller, "NanoBootsTraveller");
 
         quantumBootsTraveller = new ItemQuantumBootsTraveller(ItemArmor.ArmorMaterial.DIAMOND, 3, 3)
