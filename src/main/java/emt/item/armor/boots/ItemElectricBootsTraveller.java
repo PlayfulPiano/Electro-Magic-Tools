@@ -131,7 +131,7 @@ public class ItemElectricBootsTraveller extends ItemArmor
                 }
                 player.stepHeight = 1.0F;
             }
-            float speedMod = (float)getSpeedModifier(itemStack);
+            float speedMod = (float) getSpeedModifier(itemStack);
             if (player.onGround) {
                 float bonus = speedBonus;
                 if (player.isInWater()) {
@@ -148,11 +148,13 @@ public class ItemElectricBootsTraveller extends ItemArmor
                 // so any other boots factor can be calculated via proportion method
                 player.jumpMovementFactor = 0.03F
                         / ((ItemElectricBootsTraveller) EMTItems.electricBootsTraveller).jumpBonus
-                        * jumpBonus * speedMod;
+                        * jumpBonus
+                        * speedMod;
             } else {
                 player.jumpMovementFactor = 0.05F
                         / ((ItemElectricBootsTraveller) EMTItems.electricBootsTraveller).jumpBonus
-                        * jumpBonus * speedMod;
+                        * jumpBonus
+                        * speedMod;
             }
         }
     }
