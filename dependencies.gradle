@@ -7,4 +7,5 @@ dependencies {
 
     api 'net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev'
     api 'thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev'
+    api files("lib\\ThaumicBoots-1.2.1-master+4e33b9941e-dirty-dev.jar")
 }

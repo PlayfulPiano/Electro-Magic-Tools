@@ -18,6 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 
+import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,9 +34,11 @@ import thaumcraft.api.IVisDiscountGear;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.items.armor.Hover;
+import thaumicboots.api.IBoots;
 
+@Interface(iface = "thaumicboots.api.IBoots", modid = "thaumicboots")
 public class ItemElectricBootsTraveller extends ItemArmor
-        implements IRunicArmor, IElectricItem, IVisDiscountGear, IMetalArmor, ISpecialArmor {
+        implements IRunicArmor, IElectricItem, IVisDiscountGear, IMetalArmor, ISpecialArmor, IBoots {
 
     public int maxCharge = 100000;
     public int energyPerDamage = 1000;
@@ -138,7 +141,7 @@ public class ItemElectricBootsTraveller extends ItemArmor
                 if (player.isSneaking()) {
                     bonus /= 2.0F;
                 }
-
+                bonus *= getSpeedModifier(itemStack);
                 player.moveFlying(player.moveStrafing, player.moveForward, bonus);
             } else if (Hover.getHover(player.getEntityId())) {
                 // Base ItemBootsTraveller jumpBonus equals to jumpBonus of Electric Boots,
@@ -158,9 +161,10 @@ public class ItemElectricBootsTraveller extends ItemArmor
     public void onPlayerJump(LivingEvent.LivingJumpEvent event) {
         if (event.entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entityLiving;
-            boolean hasArmor = player.getCurrentArmor(0) != null && player.getCurrentArmor(0).getItem() == this;
+            ItemStack boots = player.getCurrentArmor(0);
+            boolean hasArmor = boots != null && boots.getItem() == this;
 
-            if (hasArmor) player.motionY += jumpBonus;
+            if (hasArmor) player.motionY += jumpBonus * (float) getJumpModifier(boots);
         }
     }
 
