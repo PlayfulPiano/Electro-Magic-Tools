@@ -282,4 +282,19 @@ public class ItemElectricBootsTraveller extends ItemArmor
     public int getRunicCharge(ItemStack itemStack) {
         return 0;
     }
+
+    //Avoid NSM Exception when ThaumicBoots is not present.
+    public double getSpeedModifier(ItemStack stack) {
+        if (stack.stackTagCompound != null) {
+            return stack.stackTagCompound.getDouble("speed");
+        }
+        return 1.0;
+    }
+
+    public double getJumpModifier(ItemStack stack) {
+        if (stack.stackTagCompound != null) {
+            return stack.stackTagCompound.getDouble("jump");
+        }
+        return 1.0;
+    }
 }
