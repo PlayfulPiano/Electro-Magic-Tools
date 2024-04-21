@@ -283,7 +283,7 @@ public class ItemElectricBootsTraveller extends ItemArmor
         return 0;
     }
 
-    //Avoid NSM Exception when ThaumicBoots is not present.
+    // Avoid NSM Exception when ThaumicBoots is not present.
     public double getSpeedModifier(ItemStack stack) {
         if (stack.stackTagCompound != null) {
             return stack.stackTagCompound.getDouble("speed");
