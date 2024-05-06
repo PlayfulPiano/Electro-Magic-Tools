@@ -125,7 +125,7 @@ public class ItemElectricBootsTraveller extends ItemArmor
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
-        if (!player.capabilities.isFlying && (player.moveForward != 0.0F || player.moveStrafing != 0.0F)) {
+        if (player.moveForward != 0.0F || player.moveStrafing != 0.0F) {
             if (player.worldObj.isRemote && !player.isSneaking()) {
                 if (!Thaumcraft.instance.entityEventHandler.prevStep.containsKey(player.getEntityId())) {
                     Thaumcraft.instance.entityEventHandler.prevStep.put(player.getEntityId(), player.stepHeight);
