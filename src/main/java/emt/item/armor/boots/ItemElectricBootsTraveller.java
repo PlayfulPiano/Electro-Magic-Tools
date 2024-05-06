@@ -18,6 +18,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,9 +35,11 @@ import thaumcraft.api.IVisDiscountGear;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.items.armor.Hover;
+import thaumicboots.api.IBoots;
 
+@Interface(iface = "thaumicboots.api.IBoots", modid = "thaumicboots")
 public class ItemElectricBootsTraveller extends ItemArmor
-        implements IRunicArmor, IElectricItem, IVisDiscountGear, IMetalArmor, ISpecialArmor {
+        implements IRunicArmor, IElectricItem, IVisDiscountGear, IMetalArmor, ISpecialArmor, IBoots {
 
     public int maxCharge = 100000;
     public int energyPerDamage = 1000;
@@ -128,8 +132,8 @@ public class ItemElectricBootsTraveller extends ItemArmor
                 }
                 player.stepHeight = 1.0F;
             }
-
-            if (player.onGround) {
+            float speedMod = (float) getSpeedModifier(itemStack);
+            if (player.onGround || player.isOnLadder() || player.capabilities.isFlying) {
                 float bonus = speedBonus;
                 if (player.isInWater()) {
                     bonus /= 4.0F;
@@ -138,19 +142,34 @@ public class ItemElectricBootsTraveller extends ItemArmor
                 if (player.isSneaking()) {
                     bonus /= 2.0F;
                 }
-
-                player.moveFlying(player.moveStrafing, player.moveForward, bonus);
+                bonus *= speedMod;
+                if (EMT.isBootsActive) {
+                    applyOmniState(player, bonus, itemStack);
+                } else {
+                    player.moveFlying(0.0F, player.moveForward, bonus);
+                }
             } else if (Hover.getHover(player.getEntityId())) {
                 // Base ItemBootsTraveller jumpBonus equals to jumpBonus of Electric Boots,
                 // so any other boots factor can be calculated via proportion method
                 player.jumpMovementFactor = 0.03F
                         / ((ItemElectricBootsTraveller) EMTItems.electricBootsTraveller).jumpBonus
-                        * jumpBonus;
+                        * jumpBonus
+                        * speedMod;
             } else {
                 player.jumpMovementFactor = 0.05F
                         / ((ItemElectricBootsTraveller) EMTItems.electricBootsTraveller).jumpBonus
-                        * jumpBonus;
+                        * jumpBonus
+                        * speedMod;
             }
+        }
+    }
+
+    @Optional.Method(modid = "thaumicboots")
+    public void applyOmniState(EntityPlayer player, float bonus, ItemStack itemStack) {
+        if (player.moveStrafing != 0.0 && itemStack.stackTagCompound.getBoolean("omni")) {
+            player.moveFlying(player.moveStrafing, 0.0F, bonus);
+        } else if (player.moveForward != 0.0) {
+            player.moveFlying(0.0F, player.moveForward, bonus);
         }
     }
 
@@ -158,9 +177,10 @@ public class ItemElectricBootsTraveller extends ItemArmor
     public void onPlayerJump(LivingEvent.LivingJumpEvent event) {
         if (event.entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entityLiving;
-            boolean hasArmor = player.getCurrentArmor(0) != null && player.getCurrentArmor(0).getItem() == this;
+            ItemStack boots = player.getCurrentArmor(0);
+            boolean hasArmor = boots != null && boots.getItem() == this;
 
-            if (hasArmor) player.motionY += jumpBonus;
+            if (hasArmor) player.motionY += jumpBonus * (float) getJumpModifier(boots);
         }
     }
 
@@ -275,5 +295,20 @@ public class ItemElectricBootsTraveller extends ItemArmor
     @Override
     public int getRunicCharge(ItemStack itemStack) {
         return 0;
+    }
+
+    // Avoid NSM Exception when ThaumicBoots is not present.
+    public double getSpeedModifier(ItemStack stack) {
+        if (stack.stackTagCompound != null) {
+            return stack.stackTagCompound.getDouble("speed");
+        }
+        return 1.0;
+    }
+
+    public double getJumpModifier(ItemStack stack) {
+        if (stack.stackTagCompound != null) {
+            return stack.stackTagCompound.getDouble("jump");
+        }
+        return 1.0;
     }
 }
