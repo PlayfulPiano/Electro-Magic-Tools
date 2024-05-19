@@ -51,16 +51,13 @@ public class ItemFeatherWing extends ItemArmor implements IRunicArmor {
     @Override
     @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLivingBase entity, ItemStack stack, int armorSlot) {
-        try {
-            if (entity instanceof EntityPlayer) {
-                ModelWings mw = new ModelWings();
-                mw.isJumping = stack.stackTagCompound.getBoolean("isJumping");
-                return mw;
-            }
-        } catch (NullPointerException e) {
-            return new ModelWings();
+        if (entity instanceof EntityPlayer && stack != null
+                && stack.stackTagCompound != null
+                && stack.stackTagCompound.hasKey("isJumping")) {
+            ModelWings.getInstance().isJumping = stack.stackTagCompound.getBoolean("isJumping");
         }
-        return new ModelWings();
+
+        return ModelWings.getInstance();
     }
 
     @Override
@@ -72,12 +69,12 @@ public class ItemFeatherWing extends ItemArmor implements IRunicArmor {
             int amount) {
         NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
 
-        boolean isJmuping = nbtData.getBoolean("isJumping");
+        boolean isJumping = nbtData.getBoolean("isJumping");
         boolean isHolding = nbtData.getBoolean("isHolding");
 
         nbtData.setBoolean("isJumping", IC2.keyboard.isJumpKeyDown(player));
 
-        if (isJmuping) {
+        if (isJumping) {
             byte f = nbtData.getByte("f");
             nbtData.setBoolean("isHolding", true);
             if (IC2.keyboard.isSneakKeyDown(player)) nbtData.setByte("f", (byte) (0));
@@ -108,7 +105,7 @@ public class ItemFeatherWing extends ItemArmor implements IRunicArmor {
             nbtData.setByte("f", (byte) 0);
         }
 
-        if (isJmuping && !player.onGround && player.motionY < 0) {
+        if (isJumping && !player.onGround && player.motionY < 0) {
             player.motionY *= f1;
         }
 
