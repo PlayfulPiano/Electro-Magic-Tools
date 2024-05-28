@@ -125,6 +125,20 @@ public class ItemElectricBootsTraveller extends ItemArmor
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+        if (getIntertialState(itemStack) && player.moveForward == 0
+                && player.moveStrafing == 0
+                && player.capabilities.isFlying) {
+            player.motionX *= 0.5;
+            player.motionZ *= 0.5;
+        }
+        boolean omniMode = false;
+        if (EMT.isBootsActive) {
+            omniMode = isOmniEnabled(itemStack);
+            if ((player.moveForward == 0F && player.moveStrafing == 0F && omniMode)
+                    || (player.moveForward <= 0F && !omniMode)) {
+                return;
+            }
+        }
         if (player.moveForward != 0.0F || player.moveStrafing != 0.0F) {
             if (player.worldObj.isRemote && !player.isSneaking()) {
                 if (!Thaumcraft.instance.entityEventHandler.prevStep.containsKey(player.getEntityId())) {
@@ -145,7 +159,7 @@ public class ItemElectricBootsTraveller extends ItemArmor
                 bonus *= speedMod;
                 if (EMT.isBootsActive) {
                     applyOmniState(player, bonus, itemStack);
-                } else {
+                } else if (player.moveForward > 0.0) {
                     player.moveFlying(0.0F, player.moveForward, bonus);
                 }
             } else if (Hover.getHover(player.getEntityId())) {
@@ -166,10 +180,11 @@ public class ItemElectricBootsTraveller extends ItemArmor
 
     @Optional.Method(modid = "thaumicboots")
     public void applyOmniState(EntityPlayer player, float bonus, ItemStack itemStack) {
-        if (player.moveStrafing != 0.0 && itemStack.stackTagCompound.getBoolean("omni")) {
-            player.moveFlying(player.moveStrafing, 0.0F, bonus);
-        } else if (player.moveForward != 0.0) {
+        if (player.moveForward != 0.0) {
             player.moveFlying(0.0F, player.moveForward, bonus);
+        }
+        if (player.moveStrafing != 0.0 && getOmniState(itemStack)) {
+            player.moveFlying(player.moveStrafing, 0.0F, bonus);
         }
     }
 
@@ -311,4 +326,19 @@ public class ItemElectricBootsTraveller extends ItemArmor
         }
         return 1.0;
     }
+
+    public boolean getOmniState(ItemStack stack) {
+        if (stack.stackTagCompound != null) {
+            return stack.stackTagCompound.getBoolean("omni");
+        }
+        return false;
+    }
+
+    public boolean getIntertialState(ItemStack stack) {
+        if (stack.stackTagCompound != null) {
+            return stack.stackTagCompound.getBoolean("inertiacanceling");
+        }
+        return false;
+    }
+
 }
