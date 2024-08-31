@@ -250,7 +250,7 @@ public class EMTConfigHandler {
         compressedSolarOutput = config.get(
                 VALUES,
                 "Compressed Solar Panel Output",
-                10,
+                8,
                 "This is the number you have to modify if you want to make the Compressed Solar Panel yield "
                         + "more or less EU per tick. Really, you shouldn't touch that, "
                         + "since it's pretty balanced as it is.")
@@ -258,7 +258,7 @@ public class EMTConfigHandler {
         doubleCompressedSolarOutput = config.get(
                 VALUES,
                 "Double Compressed Solar Panel Output",
-                100,
+                64,
                 "This is the number you have to modify if you want to make the Double Compressed Solar Panel "
                         + "yield more or less EU per tick. Really, you shouldn't touch that, "
                         + "since it's pretty balanced as it is.")
@@ -266,7 +266,7 @@ public class EMTConfigHandler {
         tripleCompressedSolarOutput = config.get(
                 VALUES,
                 "Triple Compressed Solar Panel Output",
-                1000,
+                512,
                 "This is the number you have to modify if you want to make the Triple Compressed Solar Panel "
                         + "yield more or less EU per tick. Really, you shouldn't touch that, "
                         + "since it's pretty balanced as it is.")
@@ -274,7 +274,7 @@ public class EMTConfigHandler {
         quadrupleCompressedSolarOutput = config.get(
                 VALUES,
                 "Quadruple Compressed Solar Panel Output",
-                10000,
+                4096,
                 "This is the number you have to modify if you want to make the Quadruple Compressed Solar Panel "
                         + "yield more or less EU per tick. Really, you shouldn't touch that, "
                         + "since it's pretty balanced as it is.")
@@ -282,7 +282,7 @@ public class EMTConfigHandler {
         quintupleCompressedSolarOutput = config.get(
                 VALUES,
                 "Quintouple Compressed Solar Panel Output",
-                100000,
+                32768,
                 "This is the number you have to modify if you want to make the Quintouple Compressed Solar Panel "
                         + "yield more or less EU per tick. Really, you shouldn't touch that, "
                         + "since it's pretty balanced as it is.")
@@ -290,7 +290,7 @@ public class EMTConfigHandler {
         sextupleCompressedSolarOutput = config.get(
                 VALUES,
                 "Sextouple Compressed Solar Panel Output",
-                1000000,
+                262144,
                 "This is the number you have to modify if you want to make the Sextouple Compressed Solar Panel "
                         + "yield more or less EU per tick. Really, you shouldn't touch that, "
                         + "since it's pretty balanced as it is.")
@@ -298,7 +298,7 @@ public class EMTConfigHandler {
         septupleCompressedSolarOutput = config.get(
                 VALUES,
                 "Septouple Compressed Solar Panel Output",
-                10000000,
+                2097152,
                 "This is the number you have to modify if you want to make the Septouple Compressed Solar Panel "
                         + "yield more or less EU per tick. Really, you shouldn't touch that, "
                         + "since it's pretty balanced as it is.")
@@ -306,7 +306,7 @@ public class EMTConfigHandler {
         octupleCompressedSolarOutput = config.get(
                 VALUES,
                 "Octtouple Compressed Solar Panel Output",
-                100000000,
+                16777216,
                 "This is the number you have to modify if you want to make the Octtouple Compressed Solar Panel "
                         + "yield more or less EU per tick. Really, you shouldn't touch that, "
                         + "since it's pretty balanced as it is.")
